@@ -4,7 +4,7 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class ResponseHandler implements HttpHandler {
+public class HelloHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
