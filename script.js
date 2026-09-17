@@ -1,73 +1,97 @@
 async function getWeather() {
-    const city = document.getElementById('cityInput').value;
+
+    // Get city name from input
+    const city = document.getElementById('cityInput').value.trim();
+
+    // Validate input
     if (!city) {
         alert("Please enter a city name!");
         return;
     }
 
     try {
+
+        // Create Axios instance
         const api = axios.create({
-            baseURL: window.location.origin.replace(
-                /(\.codechef-apps\.com)/,
-                '-backend$1'
-            ),
+            baseURL: 'http://localhost:8080',
             headers: {
                 'Content-Type': 'application/json'
-            },
+            }
         });
 
-        // Use Axios for API request
-        const response = await api.post('/weather', { city: city });
-        const data = response.data;
-
-        if (data.error) {
-            document.getElementById('weatherResult').innerHTML =
-                `<p style="color: red;">${data.error}</p>`;
-        } else {
-            document.getElementById('weatherResult').innerHTML = `
-                <h2>Weather in ${data.City}</h2>
-                <p>Temperature: ${data.Temperature}</p>
-                <p>Description: ${data.Description}</p>
-                <p>Humidity: ${data.Humidity}</p>
-            `;
-        }
-    } catch (error) {
-        console.error("Error:", error);
-    }
-}async function getWeather() {
-    const city = document.getElementById('cityInput').value;
-    if (!city) {
-        alert("Please enter a city name!");
-        return;
-    }
-
-    try {
-        const api = axios.create({
-            baseURL: window.location.origin.replace(
-                /(\.codechef-apps\.com)/,
-                '-backend$1'
-            ),
-            headers: {
-                'Content-Type': 'application/json'
-            },
+        // Send POST request to Java backend
+        const response = await api.post('/weather', {
+            city: city
         });
 
-        // Use Axios for API request
-        const response = await api.post('/weather', { city: city });
+        // Get response data
         const data = response.data;
 
+        console.log("Weather data:", data);
+
+        // Check for error returned by backend
         if (data.error) {
-            document.getElementById('weatherResult').innerHTML =
-                `<p style="color: red;">${data.error}</p>`;
+
+            document.getElementById('weatherResult').innerHTML = `
+                <p style="color: red;">
+                    ${data.error}
+                </p>
+            `;
+
         } else {
+
+            // Display weather information
             document.getElementById('weatherResult').innerHTML = `
                 <h2>Weather in ${data.City}</h2>
-                <p>Temperature: ${data.Temperature}°C</p>
-                <p>Description: ${data.Description}</p>
-                <p>Humidity: ${data.Humidity}%</p>
+
+                <p>
+                    <strong>Temperature:</strong>
+                    ${data.Temperature}
+                </p>
+
+                <p>
+                    <strong>Description:</strong>
+                    ${data.Description}
+                </p>
+
+                <p>
+                    <strong>Humidity:</strong>
+                    ${data.Humidity}
+                </p>
             `;
         }
+
     } catch (error) {
+
         console.error("Error:", error);
+
+        // Handle different types of errors
+        if (error.response) {
+
+            console.error("Backend response:", error.response.data);
+
+            document.getElementById('weatherResult').innerHTML = `
+                <p style="color: red;">
+                    Server Error: ${error.response.status}
+                </p>
+            `;
+
+        } else if (error.request) {
+
+            document.getElementById('weatherResult').innerHTML = `
+                <p style="color: red;">
+                    Cannot connect to the backend server.
+                    Make sure WeatherServer is running on port 8080.
+                </p>
+            `;
+
+        } else {
+
+            document.getElementById('weatherResult').innerHTML = `
+                <p style="color: red;">
+                    Something went wrong. Please try again.
+                </p>
+            `;
+        }
     }
 }
