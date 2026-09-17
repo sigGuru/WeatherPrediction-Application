@@ -9,7 +9,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class WeatherServer {
-    private static final String API_KEY = "d31f33192b854726f9896945260e1bde"; // OpenWeatherMap API key
+    private static final String API_KEY = "YOUR_API_KEY"; // OpenWeatherMap API key
 
     public static void main(String[] args) throws IOException {
         int port = 8080;
